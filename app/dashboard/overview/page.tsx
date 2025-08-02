@@ -47,7 +47,7 @@ const DashboardPage = () => {
       <div className="flex gap-6">
         <Sidebar user={user} link='overview' />
         <div className="flex-1">
-          <div className="flex flex-col justify-center items-center bg-yellow-50 rounded-sm p-4  py-8">
+          <div className="flex flex-col justify-center items-center bg-yellow-100 rounded-md p-4  py-8">
             <p className="text-md"> You have not added phone number please add it </p>
             <Link href=""><p className="text-sm text-yellow-400"> Add Phone Number </p></Link>
           </div>

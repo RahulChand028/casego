@@ -1,12 +1,23 @@
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
+import { redirect } from 'next/navigation';
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const session = await auth.api.getSession({
+    headers: await headers()
+  })
+  
+  if(!session) {
+    redirect('/onboard');
+  }
   return (
     <div>
       <header className="border-b border-black/10 px-4 py-3 flex flex-col gap-2 sm:gap-4 md:flex-row md:justify-between md:items-center w-full">

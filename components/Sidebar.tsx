@@ -1,8 +1,20 @@
+'use client'
 import React from "react";
 import { User } from "better-auth";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
+import { authClient } from "@/common/clientAuth";
+
 
 const Sidebar: React.FC<{ user: User | null, link: string }> = ({ user, link }) => {
+
+  const router = useRouter();
+
+  const logout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    await authClient.signOut();
+    router.push('/');
+  }
   return (
     <div className="flex flex-col w-[300px]">
       <div className="flex flex-col py-4 px-3 text-sm">
@@ -28,7 +40,7 @@ const Sidebar: React.FC<{ user: User | null, link: string }> = ({ user, link }) 
         <Link href="/dashboard/contactus">
           <p className={`py-1 px-3 hover:bg-yellow-100 rounded-sm cursor-pointer font-bold text-gray-700 ${link == 'contact' ? 'bg-yellow-100 text-black' : 'text-gray-700'}`}>Contact Us</p>
         </Link>
-        <Link href="/dashboard/logout">
+        <Link href="" onClick={logout}>
           <p className={`py-1 px-3 hover:bg-yellow-100 rounded-sm cursor-pointer font-bold text-gray-700 ${link == 'logout' ? 'bg-yellow-100 text-black' : 'text-gray-700'}`}>Logout</p>
         </Link>
       </div>
