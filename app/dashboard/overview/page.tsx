@@ -189,6 +189,7 @@ const DashboardPage = () => {
         isOpen={isUpdateModalOpen}
         onRequestClose={closeUpdateModal}
         onSubmit={updatePhone}
+        isUpdating={isUpdating}
       />
 
       <div className="flex gap-6">

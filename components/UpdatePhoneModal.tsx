@@ -13,6 +13,7 @@ interface UpdatePhoneModalProps {
         id: string,
         phone_number: string
     } | null;
+    isUpdating: boolean;
 }
 
 interface FormData {
@@ -91,13 +92,14 @@ const UpdatePhoneModal: React.FC<UpdatePhoneModalProps> = ({
     isOpen,
     onRequestClose,
     onSubmit,
-    data
+    data,
+    isUpdating
 }) => {
     const {
         register,
         handleSubmit,
         setValue,
-        formState: { errors, isSubmitting },
+        formState: { errors },
         reset,
     } = useForm<FormData>({
         defaultValues: {
@@ -220,10 +222,10 @@ const UpdatePhoneModal: React.FC<UpdatePhoneModalProps> = ({
                         </button>
                         <button
                             type="submit"
-                            disabled={isSubmitting}
+                            disabled={isUpdating}
                             className="flex-1 px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                         >
-                            {isSubmitting ? (
+                            {isUpdating ? (
                                 <div className="flex items-center justify-center gap-2">
                                     <div className="w-4 h-4 border-3 border-t-3 border-white border-t-gradient-to-r border-t-yellow-500 rounded-full animate-spin"></div>
                                     <span>Updating</span>

@@ -5,33 +5,24 @@ import { phoneNumber } from '@/lib/schema';
 import { eq, and } from 'drizzle-orm';
 import { headers } from 'next/headers';
 
+
+
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
   try {
-    // Get the authenticated user
+
     const session = await auth.api.getSession({
-      headers: await headers()
+      headers: await headers(),
     });
 
     if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const phoneId = params.id;
+    const { id: phoneId } = await params;
 
-    if (!phoneId) {
-      return NextResponse.json(
-        { error: 'Phone ID is required' },
-        { status: 400 }
-      );
-    }
-
-    // Check if phone number exists and belongs to the user
     const existingPhone = await db
       .select()
       .from(phoneNumber)
@@ -43,13 +34,9 @@ export async function DELETE(
       );
 
     if (existingPhone.length === 0) {
-      return NextResponse.json(
-        { error: 'Phone number not found or does not belong to user' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
-    // Delete the phone number
     await db
       .delete(phoneNumber)
       .where(
@@ -59,23 +46,19 @@ export async function DELETE(
         )
       );
 
-    return NextResponse.json(
-      { message: 'Phone number deleted successfully' },
-      { status: 200 }
-    );
-
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'Deleted' }, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
 
+
+
+
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Get the authenticated user
@@ -87,7 +70,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const phoneId = params.id;
+    const { id: phoneId } = await params;
 
     if (!phoneId) {
       return NextResponse.json({ error: 'Phone ID is required' }, { status: 400 });

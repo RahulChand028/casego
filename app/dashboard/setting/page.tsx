@@ -3,13 +3,12 @@
 import { useState, useEffect } from "react";
 import { authClient } from "@/common/clientAuth";
 import { User } from "better-auth";
+import Image from "next/image"; 
 import { 
   HiOutlineUser, 
   HiOutlineBell, 
   HiOutlineShieldCheck, 
   HiOutlineCog,
-  HiOutlineGlobeAlt,
-  HiOutlineColorSwatch,
   HiOutlineDownload,
   HiOutlineTrash,
   HiOutlineEye,
@@ -29,7 +28,7 @@ const SettingsPage = () => {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsNotifications, setSmsNotifications] = useState(true);
   const [reportFrequency, setReportFrequency] = useState('daily');
-  const [theme, setTheme] = useState('light');
+  // const [theme, setTheme] = useState('light');
   const [language, setLanguage] = useState('en');
   const [timezone, setTimezone] = useState('Asia/Calcutta');
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
@@ -70,7 +69,7 @@ const SettingsPage = () => {
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
               {user?.image ? (
-                <img src={user.image} alt="Profile" className="w-16 h-16 rounded-full" />
+                <Image width={36} height={36} src={user.image} alt="Profile" className="w-16 h-16 rounded-full" />
               ) : (
                 <HiOutlineUser className="text-gray-500 text-2xl" />
               )}
@@ -206,7 +205,7 @@ const SettingsPage = () => {
             </button>
           </div>
 
-          <div className="border-t pt-4">
+          <div className="border-t pt-4 border-t-gray-200">
             <h4 className="font-medium text-gray-800 mb-2">Connected Accounts</h4>
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
               <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
