@@ -4,7 +4,10 @@ import {
   timestamp,
   boolean,
   integer,
+  pgEnum,
 } from "drizzle-orm/pg-core";
+
+export const integrationType = pgEnum("integration_type", ["database", "shopify"]);
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -64,4 +67,40 @@ export const verification = pgTable("verification", {
   updatedAt: timestamp("updated_at").$defaultFn(
     () => /* @__PURE__ */ new Date(),
   ),
+});
+
+export const phoneNumber = pgTable("phone_number", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  country_code: text("country_code").notNull(),
+  phone_number: text("phone_number").notNull(),
+  valid: boolean("valid")
+    .$defaultFn(() => false)
+    .notNull(),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const integration = pgTable("integration", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  type: integrationType("type").notNull(),
+  database_url: text("database_url").notNull(),
+  valid: boolean("valid")
+    .$defaultFn(() => false)
+    .notNull(),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
 });

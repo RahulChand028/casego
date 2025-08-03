@@ -43,7 +43,6 @@ export default function OnboardPage() {
   useEffect(() => {
     const fetchSession = async () => {
       const session = await authClient.getSession();
-      console.log("sessions awaited : ", session);
       if (session.data) {
         router.push('/dashboard/overview');
       }

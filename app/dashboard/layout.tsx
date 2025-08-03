@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { redirect } from 'next/navigation';
+import { HiOutlineUser } from "react-icons/hi";
 
 export default async function RootLayout({
   children,
@@ -25,6 +26,25 @@ export default async function RootLayout({
           <Link href="/">
             <Image src="/casego-logo.png" alt="casego" width={120} height={100} />
           </Link>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              {session?.user?.image ? (
+                <Image
+                  src={session.user.image}
+                  alt="Profile"
+                  width={40}
+                  height={40}
+                  className="rounded-full border-2 border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
+                />
+              ) : (
+                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center border-2 border-gray-200 hover:border-gray-300 transition-colors cursor-pointer">
+                  <HiOutlineUser className="text-gray-600 text-lg" />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </header>
       {children}
