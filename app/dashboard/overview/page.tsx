@@ -12,17 +12,25 @@ import UpdatePhoneModal from '@/components/UpdatePhoneModal';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import Loading from '@/components/Loading';
 
+type PhoneNumber = {
+  id: string;
+  country_code: string;
+  phone_number: string;
+  valid: boolean;
+  createdAt: string;
+}
+
 const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [phoneNumbers, setPhoneNumbers] = useState<any[]>([]);
+  const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>([]);
   const [loadingPhones, setLoadingPhones] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [selectedPhone, setSelectedPhone] = useState<any>(null);
+  const [selectedPhone, setSelectedPhone] = useState<PhoneNumber | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -80,12 +88,12 @@ const DashboardPage = () => {
     }
   };
 
-  const handleEditPhone = (phone: any) => {
+  const handleEditPhone = (phone: PhoneNumber) => {
     setIsUpdateModalOpen(true);
     setSelectedPhone(phone);
   };
 
-  const handleDeletePhone = (phone: any) => {
+  const handleDeletePhone = (phone: PhoneNumber) => {
     setSelectedPhone(phone);
     setDeleteModalOpen(true);
   };

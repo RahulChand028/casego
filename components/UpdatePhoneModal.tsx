@@ -12,7 +12,7 @@ interface UpdatePhoneModalProps {
         country_code: string,
         id: string,
         phone_number: string
-    }
+    } | null;
 }
 
 interface FormData {
