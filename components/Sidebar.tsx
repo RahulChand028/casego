@@ -23,7 +23,7 @@ const Sidebar: React.FC<{ user: User | null, link: string }> = ({ user, link }) 
     router.push('/');
   }
   return (
-    <div className="flex flex-col w-[300px]">
+    <div className="flex flex-col md:w-[300px] w-full px-4">
       <div className="flex flex-col py-4 px-3 text-sm">
         <p className="">{user?.name}</p>
         <p className="">{user?.email}</p>

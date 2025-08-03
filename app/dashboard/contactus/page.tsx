@@ -41,10 +41,10 @@ const ContactUs = () => {
   }
 
   return (
-    <div className="min-h-screen font-sans pt-24">
-      <div className="flex gap-6">
+    <div className="min-h-screen font-sans pt-8 md:pt-24">
+      <div className="flex gap-6 flex-col md:flex-row">
         <Sidebar user={user} link='contact' />
-        <div className="flex-1 max-w-4xl">
+        <div className="flex-1 max-w-4xl px-4">
           {/* Header Section */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">Contact Us</h1>

@@ -31,8 +31,8 @@ const Integration = () => {
   }
 
   return (
-    <div className="min-h-screen font-sans pt-24">
-      <div className="flex gap-6">
+    <div className="min-h-screen font-sans pt-8 md:pt-24">
+      <div className="flex gap-6 flex-col md:flex-row">
         <Sidebar user={user} link='integration' />
       </div>
     </div>

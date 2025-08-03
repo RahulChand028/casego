@@ -21,10 +21,10 @@ export default async function RootLayout({
   }
   return (
     <div>
-      <header className="border-b border-black/10 px-4 py-3 flex flex-col gap-2 sm:gap-4 md:flex-row md:justify-between md:items-center w-full">
+      <header className="border-b border-black/10 px-4 py-3 flex flex-col gap-2 sm:gap-4 flex-row justify-between items-center w-full">
         <div className="flex items-center gap-2 sm:gap-3 text-2xl sm:text-3xl font-black tracking-tight">
           <Link href="/">
-            <Image src="/casego-logo.png" alt="casego" width={120} height={100} />
+            <Image src="/casego-logo.png" alt="casego" width={80} height={80} />
           </Link>
         </div>
         <div className="flex items-center gap-3">

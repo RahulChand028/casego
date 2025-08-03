@@ -169,7 +169,7 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen font-sans pt-24">
+    <div className="min-h-screen font-sans pt-8 md:pt-24">
 
       <AddPhoneModal
         isOpen={isModalOpen}
@@ -192,9 +192,9 @@ const DashboardPage = () => {
         isUpdating={isUpdating}
       />
 
-      <div className="flex gap-6">
+      <div className="flex gap-6 flex-col md:flex-row">
         <Sidebar user={user} link='overview' />
-        <div className="flex-1">
+        <div className="flex-1 px-4">
 
           {loadingPhones ? (
             <Loading size="md" text="Loading Phone Numbers" />
@@ -228,10 +228,10 @@ const DashboardPage = () => {
                       </span>
                     </div>
                     <div className="flex items-center gap-4">
-                      <div className="text-sm text-gray-500">
-                        Added {new Date(phone.createdAt).toLocaleDateString()}
+                      <div className="text-sm text-gray-500 hidden md:block">
+                        {new Date(phone.createdAt).toLocaleDateString()}
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center">
                         <button
                           onClick={() => handleEditPhone(phone)}
                           className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"

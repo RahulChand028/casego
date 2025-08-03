@@ -8,14 +8,14 @@ export default function Home() {
   return (
     <div className="bg-[#FDFBF7] min-h-screen font-sans text-[#181818]">
       {/* Header & Hero */}
-      <header className="border-b border-black/10 px-4 py-3 flex flex-col gap-2 sm:gap-4 md:flex-row md:justify-between md:items-center">
+      <header className="border-b border-black/10 px-4 py-3 flex flex-col gap-2 sm:gap-4 flex-row justify-between items-center">
         <div className="flex items-center gap-2 sm:gap-3 text-2xl sm:text-3xl font-black tracking-tight">
-          <Image src="/casego-logo.png" alt="casego" width={120} height={100} />
+          <Image src="/casego-logo.png" alt="casego" width={80} height={80} />
         </div>
         <div className="flex items-center gap-4">
           <Link 
-            href="/onboard" 
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-yellow-50 hover:bg-yellow-100 border-yellow-300 border-r-3 border-b-3  text-black rounded-lg shadow transition font-bold"
+            href="/onboard"
+            className="flex items-center justify-center gap-2 md:px-4 md:py-3 px-6 py-2    bg-yellow-50 hover:bg-yellow-100 border-yellow-300 border-r-3 border-b-3  text-black rounded-lg shadow transition font-bold"
           >
             <FcGoogle className="h-5 w-5" />
             Login

@@ -322,8 +322,8 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="min-h-screen font-sans pt-24">
-      <div className="flex gap-6">
+    <div className="min-h-screen font-sans pt-8 md:pt-24 px-4">
+      <div className="flex gap-6 flex-col md:flex-row">
         <Sidebar user={user} link='setting' />
         <div className="flex-1 max-w-6xl">
           {/* Header */}
@@ -334,9 +334,9 @@ const SettingsPage = () => {
             </p>
           </div>
 
-          <div className="flex gap-6">
+          <div className="flex gap-6 flex-col md:flex-row">
             {/* Settings Navigation */}
-            <div className="w-64 bg-white border border-gray-200 rounded-lg p-4 h-fit">
+            <div className="wfull md:w-64 bg-white border border-gray-200 rounded-lg p-4 h-fit">
               <nav className="space-y-2">
                 {settingSections.map((section) => {
                   const Icon = section.icon;
