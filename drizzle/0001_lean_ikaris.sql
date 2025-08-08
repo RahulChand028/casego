@@ -1,0 +1,1 @@
+ALTER TABLE "integration" ADD COLUMN "db_schema" text;

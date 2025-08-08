@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     if (existingPhoneCount[0]?.count >= 5) {
       return NextResponse.json(
-        { error: 'Maximum of 5 phone numbers allowed per user' },
+        { error: 'You have reached the maximum limit of 5 phone numbers. Please delete an existing number to add a new one.' },
         { status: 400 }
       );
     }
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
 
     if (existingPhone.length > 0) {
       return NextResponse.json(
-        { error: 'Phone number already exists for this user' },
+        { error: 'This phone number is already registered with your account' },
         { status: 400 }
       );
     }

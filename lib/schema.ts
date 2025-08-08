@@ -93,6 +93,7 @@ export const integration = pgTable("integration", {
     .references(() => user.id, { onDelete: "cascade" }),
   type: integrationType("type").notNull(),
   database_url: text("database_url").notNull(),
+  db_schema: text("db_schema"),
   valid: boolean("valid")
     .$defaultFn(() => false)
     .notNull(),

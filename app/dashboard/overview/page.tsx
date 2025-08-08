@@ -3,14 +3,29 @@
 import { useState, useEffect } from "react";
 import { authClient } from "@/common/clientAuth";
 import { User } from "better-auth";
-import Link from "next/link";
-import { HiOutlineCheckCircle, HiOutlineXCircle, HiOutlinePencil, HiOutlineTrash } from 'react-icons/hi';
+import { showToast } from "@/lib/toast";
+import { 
+  HiOutlineCheckCircle, 
+  HiOutlineXCircle, 
+  HiOutlinePencil, 
+  HiOutlineTrash,
+  HiOutlinePhone,
+  HiOutlinePlus,
+  HiOutlineUser,
+  HiOutlineCalendar,
+  HiOutlineClock,
+  HiOutlineDatabase
+} from 'react-icons/hi';
 
-import Sidebar from '@/components/Sidebar';
-import AddPhoneModal from '@/components/AddPhoneModal';
-import UpdatePhoneModal from '@/components/UpdatePhoneModal';
-import DeleteConfirmModal from '@/components/DeleteConfirmModal';
-import Loading from '@/components/Loading';
+import { 
+  Sidebar, 
+  Loading, 
+  Card, 
+  Button, 
+  AddPhoneModal, 
+  UpdatePhoneModal, 
+  DeleteConfirmModal 
+} from '@/components/ui';
 
 type PhoneNumber = {
   id: string;
@@ -58,6 +73,7 @@ const DashboardPage = () => {
         setPhoneNumbers(data.phoneNumbers || []);
       }
     } catch (error) {
+      console.error('Error fetching phone numbers:', error);
     } finally {
       setLoadingPhones(false);
     }
@@ -83,8 +99,12 @@ const DashboardPage = () => {
       }
 
       fetchPhoneNumbers();
+      setIsModalOpen(false);
+      showToast.phoneAdded();
 
     } catch (error) {
+      console.error('Error adding phone number:', error);
+      showToast.error('Failed to add phone number');
     }
   };
 
@@ -101,7 +121,6 @@ const DashboardPage = () => {
   const confirmDeletePhone = async () => {
     if (!selectedPhone) return;
 
-
     setIsDeleting(true);
 
     try {
@@ -113,11 +132,15 @@ const DashboardPage = () => {
         fetchPhoneNumbers();
         setDeleteModalOpen(false);
         setSelectedPhone(null);
+        showToast.phoneDeleted();
       } else {
         const data = await response.json();
         throw new Error(data.error || 'Failed to delete phone number');
       }
-    } catch (error) { } finally {
+    } catch (error) {
+      console.error('Error deleting phone number:', error);
+      showToast.error('Failed to delete phone number');
+    } finally {
       setIsDeleting(false);
     }
   };
@@ -130,12 +153,13 @@ const DashboardPage = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const closeUpdateModal = () => setIsUpdateModalOpen(false)
-
+  const closeUpdateModal = () => {
+    setIsUpdateModalOpen(false);
+    setSelectedPhone(null);
+  };
 
   const updatePhone = async (data: { countryCode: string, phoneNumber: string }) => {
     if (!selectedPhone) return;
-
 
     setIsUpdating(true);
 
@@ -155,13 +179,37 @@ const DashboardPage = () => {
         fetchPhoneNumbers();
         setIsUpdateModalOpen(false);
         setSelectedPhone(null);
+        showToast.phoneUpdated();
       } else {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to delete phone number');
+        throw new Error(data.error || 'Failed to update phone number');
       }
-    } catch (error) { } finally {
+    } catch (error) {
+      console.error('Error updating phone number:', error);
+      showToast.error('Failed to update phone number');
+    } finally {
       setIsUpdating(false);
     }
+  };
+
+  const getStatusBadge = (valid: boolean) => {
+    return (
+      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+        valid 
+          ? 'bg-green-100 text-green-800' 
+          : 'bg-red-100 text-red-800'
+      }`}>
+        {valid ? 'Verified' : 'Unverified'}
+      </span>
+    );
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   };
 
   if (isLoading) {
@@ -170,18 +218,211 @@ const DashboardPage = () => {
 
   return (
     <div className="min-h-screen font-sans pt-8 md:pt-24">
+      <div className="flex gap-6 flex-col md:flex-row">
+        <Sidebar user={user} activeLink='overview' />
+        
+        <div className="flex-1 px-4 md:px-8">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-gray-900">Dashboard Overview</h1>
+              <p className="text-gray-600 mt-2">
+                Welcome back, {user?.name}! Manage your phone numbers and integrations.
+              </p>
+            </div>
 
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <Card className="p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <HiOutlinePhone className="text-blue-600 text-xl" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Phone Numbers</p>
+                    <p className="text-2xl font-bold text-gray-900">{phoneNumbers.length}/5</p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-green-100 rounded-lg">
+                    <HiOutlineCheckCircle className="text-green-600 text-xl" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Verified</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {phoneNumbers.filter(phone => phone.valid).length}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-yellow-100 rounded-lg">
+                    <HiOutlineUser className="text-yellow-600 text-xl" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Account</p>
+                    <p className="text-2xl font-bold text-gray-900">Active</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* Phone Numbers Section */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">Phone Numbers</h2>
+                  <p className="text-gray-600 text-sm">
+                    Manage your phone numbers for WhatsApp notifications
+                  </p>
+                </div>
+                <Button
+                  onClick={openModal}
+                  leftIcon={<HiOutlinePlus />}
+                  disabled={phoneNumbers.length >= 5}
+                >
+                  Add Phone Number
+                </Button>
+              </div>
+
+              {/* Phone Limit Warning */}
+              {phoneNumbers.length >= 5 && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-6">
+                  <p className="text-yellow-800 text-sm">
+                    You have reached the maximum limit of 5 phone numbers. Please delete an existing number to add a new one.
+                  </p>
+                </div>
+              )}
+
+              {/* Loading State */}
+              {loadingPhones ? (
+                <div className="flex justify-center py-12">
+                  <Loading size="md" text="Loading phone numbers..." />
+                </div>
+              ) : (
+                <>
+                  {/* Empty State */}
+                  {phoneNumbers.length === 0 ? (
+                    <Card className="text-center py-12">
+                      <HiOutlinePhone className="text-4xl text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        Enable Report Delivery & AI Chat
+                      </h3>
+                      <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                        Add your phone number to receive automated reports and chat with our AI agent directly via WhatsApp.
+                      </p>
+                      <Button
+                        onClick={openModal}
+                        leftIcon={<HiOutlinePlus />}
+                      >
+                        Add Your First Phone Number
+                      </Button>
+                    </Card>
+                  ) : (
+                    /* Phone Numbers List */
+                    <div className="space-y-4">
+                      {phoneNumbers.map((phone) => (
+                        <Card key={phone.id} className="p-6">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-2">
+                                {phone.valid ? (
+                                  <HiOutlineCheckCircle className="text-green-500 text-xl" />
+                                ) : (
+                                  <HiOutlineXCircle className="text-red-500 text-xl" />
+                                )}
+                                <span className="text-gray-900 font-medium">
+                                  {phone.country_code} {phone.phone_number}
+                                </span>
+                              </div>
+                              {getStatusBadge(phone.valid)}
+                            </div>
+                            
+                            <div className="flex items-center gap-4">
+                              <div className="flex items-center gap-1 text-sm text-gray-500">
+                                <HiOutlineCalendar className="text-gray-400" />
+                                <span className="hidden sm:inline">Added:</span>
+                                <span>{formatDate(phone.createdAt)}</span>
+                              </div>
+                              
+                              <div className="flex items-center gap-1">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  onClick={() => handleEditPhone(phone)}
+                                  leftIcon={<HiOutlinePencil />}
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  variant="danger"
+                                  size="sm"
+                                  onClick={() => handleDeletePhone(phone)}
+                                  leftIcon={<HiOutlineTrash />}
+                                >
+                                  Delete
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                      
+                      <div className="text-center">
+                        <p className="text-sm text-gray-500">
+                          {phoneNumbers.length} of 5 phone numbers added
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Quick Actions */}
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <Button
+                  variant="secondary"
+                  onClick={() => window.location.href = '/dashboard/integration'}
+                  className="justify-start"
+                >
+                  <HiOutlineDatabase className="mr-2" />
+                  Manage Integrations
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => window.location.href = '/dashboard/setting'}
+                  className="justify-start"
+                >
+                  <HiOutlineUser className="mr-2" />
+                  Account Settings
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => window.location.href = '/dashboard/contactus'}
+                  className="justify-start"
+                >
+                  <HiOutlinePhone className="mr-2" />
+                  Contact Support
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* Modals */}
       <AddPhoneModal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         onSubmit={handleAddPhone}
-      />
-
-      <DeleteConfirmModal
-        isOpen={deleteModalOpen}
-        onRequestClose={closeDeleteModal}
-        onConfirm={confirmDeletePhone}
-        isDeleting={isDeleting}
       />
 
       <UpdatePhoneModal
@@ -192,92 +433,15 @@ const DashboardPage = () => {
         isUpdating={isUpdating}
       />
 
-      <div className="flex gap-6 flex-col md:flex-row">
-        <Sidebar user={user} link='overview' />
-        <div className="flex-1 px-4">
-
-          {loadingPhones ? (
-            <Loading size="md" text="Loading Phone Numbers" />
-          ) : phoneNumbers.length > 0 ? (
-            <div className="space-y-3">
-              <div className="flex py-4 justify-end">
-                <button
-                  onClick={openModal}
-                  className="px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition-colors font-medium  text-sm cursor-pointer"
-                >
-                  Add Phone Number
-                </button>
-              </div>
-              {phoneNumbers.map((phone, index) => (
-                <div key={phone.id} className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 hover:bg-yellow-100 transition-colors">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2">
-                        {phone.valid ? (
-                          <HiOutlineCheckCircle className="text-green-500 text-xl" />
-                        ) : (
-                          <HiOutlineXCircle className="text-red-500 text-xl" />
-                        )}
-                        <span className="text-gray-700 font-medium">{phone.country_code}-{phone.phone_number}</span>
-                      </div>
-                      <span className={`px-2 py-1 text-xs rounded-full ${phone.valid
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                        }`}>
-                        {phone.valid ? 'Verified' : 'Unverified'}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-sm text-gray-500 hidden md:block">
-                        {new Date(phone.createdAt).toLocaleDateString()}
-                      </div>
-                      <div className="flex items-center">
-                        <button
-                          onClick={() => handleEditPhone(phone)}
-                          className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                          title="Edit phone number"
-                        >
-                          <HiOutlinePencil className="text-lg" />
-                        </button>
-                        <button
-                          onClick={() => handleDeletePhone(phone)}
-                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                          title="Delete phone number"
-                        >
-                          <HiOutlineTrash className="text-lg" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div className="text-sm text-gray-500 mt-2 text-center">
-                {phoneNumbers.length}/5 phone numbers added
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col justify-center items-center bg-yellow-50 border border-yellow-200 rounded-lg p-6 py-8 h-full">
-              <div className="text-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Enable Report Delivery & AI Chat</h3>
-                <p className="text-gray-600 mb-4 text-sm">
-                  Add your phone number to receive automated reports<br />
-                  and chat with our AI agent directly via WhatsApp.
-                </p>
-              </div>
-              <button
-                onClick={openModal}
-                className="px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition-colors font-medium cursor-pointer"
-              >
-                Add Phone Number
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-
-
-
+      <DeleteConfirmModal
+        isOpen={deleteModalOpen}
+        onRequestClose={closeDeleteModal}
+        onConfirm={confirmDeletePhone}
+        title="Delete Phone Number"
+        message="Are you sure you want to delete this phone number? This action cannot be undone."
+        itemName={selectedPhone ? `${selectedPhone.country_code} ${selectedPhone.phone_number}` : undefined}
+        isDeleting={isDeleting}
+      />
     </div>
   );
 };

@@ -13,7 +13,7 @@ export default function Home() {
           <Image src="/casego-logo.png" alt="casego" width={80} height={80} />
         </div>
         <div className="flex items-center gap-4">
-          <Link 
+          <Link
             href="/onboard"
             className="flex items-center justify-center gap-2 md:px-4 md:py-3 px-6 py-2    bg-yellow-50 hover:bg-yellow-100 border-yellow-300 border-r-3 border-b-3  text-black rounded-lg shadow transition font-bold"
           >
@@ -23,7 +23,7 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="flex flex-col py-8 sm:py-12 justify-center relative overflow-x-hidden">  
+      <section className="flex flex-col py-8 sm:py-12 justify-center relative overflow-x-hidden">
         <div className="text-center text-4xl xs:text-5xl sm:text-6xl md:text-8xl font-black leading-tight">
           <p>GET</p>
           <p>ANALYTICS</p>
@@ -32,8 +32,8 @@ export default function Home() {
         <p className="text-center text-base sm:text-xl py-2 px-2">Database & Shopify analytics delivered directly to your WhatsApp.</p>
         <div className="flex justify-center py-8">
           <Link href="/onboard" className="flex flex-wrap bg-[#FFD700] text-[#181818] px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-  Start Free Trial
-</Link>
+            Start Free Trial
+          </Link>
         </div>
         {/* Decorative dots, hidden on mobile */}
         <div className="hidden md:block absolute top-1/2 left-4 transform -translate-y-1/2 w-8 h-8 bg-[#8B5CF6] rounded-full"></div>
@@ -65,9 +65,9 @@ export default function Home() {
         </div>
       </section>
 
-   
 
-     
+
+
 
       {/* Call to Action Section */}
       <section className="py-8 sm:py-10 px-2 sm:px-4 max-w-6xl mx-auto text-center">
@@ -81,7 +81,7 @@ export default function Home() {
       <div className="my-8">
         <Footer />
       </div>
-      
+
     </div>
   );
 }
