@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     // getInfosource
     // make a call
 
-     const result = await executeQuery('postgresql://neondb_owner:npg_v5fGajSbJCU8@ep-falling-frog-aew2abvl-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require','SELECT * from users');
+     const result = await executeQuery('');
 
 
 
