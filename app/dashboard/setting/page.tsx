@@ -89,7 +89,7 @@ const SettingsPage = () => {
               </div>
             </div>
           </div>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="flex flex-col md:flex-row md:flex-wrap gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
               <input

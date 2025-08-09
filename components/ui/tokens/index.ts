@@ -207,7 +207,7 @@ export const componentClasses = {
     primary: 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-500',
     secondary: 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 focus:ring-gray-500',
     danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-    ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-500',
+    ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-500',
     sizes: {
       sm: 'px-3 py-1.5 text-sm',
       md: 'px-4 py-2 text-sm',

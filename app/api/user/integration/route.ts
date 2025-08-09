@@ -31,50 +31,47 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate database URL
+    // Validate database URL presence
     if (!database_url || typeof database_url !== 'string') {
       return NextResponse.json(
         { error: 'Database URL is required and must be a string' },
         { status: 400 }
       );
     }
-
-    // Validate database URL format
-    const urlPattern = /^(postgresql|mysql):\/\/.+/i;
-    if (!urlPattern.test(database_url)) {
-      return NextResponse.json(
-        { error: 'Invalid database URL format. Must start with postgresql:// or mysql://' },
-        { status: 400 }
-      );
+    
+    // Validate URL format by type
+    if (type === 'database') {
+      const dbUrlPattern = /^(postgresql|mysql):\/\/.+/i;
+      if (!dbUrlPattern.test(database_url)) {
+        return NextResponse.json(
+          { error: 'Invalid database URL format. Must start with postgresql:// or mysql://' },
+          { status: 400 }
+        );
+      }
+    } else if (type === 'shopify') {
+      const httpUrlPattern = /^https?:\/\/.+/i;
+      if (!httpUrlPattern.test(database_url)) {
+        return NextResponse.json(
+          { error: 'Invalid Shopify URL format. Must start with http:// or https://' },
+          { status: 400 }
+        );
+      }
     }
 
-    // Check if user already has 5 integrations
-    const existingIntegrationCount = await db
+    // Enforce one integration per type per user
+    const existingSameType = await db
       .select({ count: count() })
-      .from(integration)
-      .where(eq(integration.userId, session.user.id));
-
-    if (existingIntegrationCount[0]?.count >= 5) {
-      return NextResponse.json(
-        { error: 'You have reached the maximum limit of 5 integrations. Please delete an existing integration to add a new one.' },
-        { status: 400 }
-      );
-    }
-
-    // Check if integration already exists for this user with same URL
-    const existingIntegration = await db
-      .select()
       .from(integration)
       .where(
         and(
-          eq(integration.database_url, database_url),
-          eq(integration.userId, session.user.id)
+          eq(integration.userId, session.user.id),
+          eq(integration.type, type as 'database' | 'shopify')
         )
       );
 
-    if (existingIntegration.length > 0) {
+    if (existingSameType[0]?.count >= 1) {
       return NextResponse.json(
-        { error: 'This database URL is already registered with your account' },
+        { error: `You already have a ${type} integration.` },
         { status: 400 }
       );
     }

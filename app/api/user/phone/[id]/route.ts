@@ -80,6 +80,25 @@ export async function PATCH(
     const body = await request.json();
     const { phone_number: phoneNumberValue, country_code: countryCodeValue } = body;
 
+    if (!phoneNumberValue || typeof phoneNumberValue !== 'string') {
+      return NextResponse.json(
+        { error: 'Phone number is required and must be a string' },
+        { status: 400 }
+      );
+    }
+
+    if (!countryCodeValue || typeof countryCodeValue !== 'string') {
+      return NextResponse.json(
+        { error: 'Country code is required and must be a string' },
+        { status: 400 }
+      );
+    }
+
+    // Compose full phone number (country code + local number)
+    const normalizedCountryCode = String(countryCodeValue).replace(/\s|-/g, '');
+    const normalizedLocalNumber = String(phoneNumberValue).replace(/\D/g, '');
+    const fullPhoneNumber = `${normalizedCountryCode}${normalizedLocalNumber}`;
+
 
     // Check if phone number exists and belongs to the user
     const existingPhone = await db
@@ -99,14 +118,13 @@ export async function PATCH(
       );
     }
 
-    // Check for duplicate phone number (excluding the current phone ID)
+    // Check for duplicate composed phone number (excluding the current phone ID)
     const duplicatePhone = await db
       .select()
       .from(phoneNumber)
       .where(
         and(
-          eq(phoneNumber.country_code, countryCodeValue),
-          eq(phoneNumber.phone_number, phoneNumberValue),
+          eq(phoneNumber.phone_number, fullPhoneNumber),
           eq(phoneNumber.userId, session.user.id),
         )
       );
@@ -125,7 +143,7 @@ export async function PATCH(
     await db
       .update(phoneNumber)
       .set({
-        phone_number: phoneNumberValue,
+        phone_number: fullPhoneNumber,
         country_code: countryCodeValue,
         valid: false,
         updatedAt: new Date(),

@@ -54,9 +54,9 @@ const ContactUs = () => {
           </div>
 
           {/* Contact Methods Grid */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div className="flex flex-col md:flex-row md:flex-wrap gap-6 mb-8">
             {/* Email Support */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow w-full md:w-1/2">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-3 bg-blue-100 rounded-full">
                   <HiOutlineMail className="text-blue-600 text-xl" />
@@ -85,7 +85,7 @@ const ContactUs = () => {
             </div>
 
             {/* Phone Support */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow w-full md:w-1/2">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-3 bg-green-100 rounded-full">
                   <HiOutlinePhone className="text-green-600 text-xl" />
@@ -114,7 +114,7 @@ const ContactUs = () => {
             </div>
 
             {/* Live Chat */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow w-full md:w-1/2">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-3 bg-purple-100 rounded-full">
                   <HiOutlineChat className="text-purple-600 text-xl" />
@@ -139,7 +139,7 @@ const ContactUs = () => {
             </div>
 
             {/* Office Location */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow w-full md:w-1/2">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-3 bg-orange-100 rounded-full">
                   <HiOutlineLocationMarker className="text-orange-600 text-xl" />
@@ -171,7 +171,7 @@ const ContactUs = () => {
               </div>
               <h3 className="text-lg font-semibold text-gray-800">Business Hours</h3>
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="flex flex-col md:flex-row md:flex-wrap gap-4">
               <div>
                 <p className="text-sm font-medium text-gray-700 mb-2">Support Hours (IST)</p>
                 <div className="space-y-1 text-sm text-gray-600">
@@ -192,8 +192,8 @@ const ContactUs = () => {
           </div>
 
           {/* Additional Resources */}
-          <div className="grid md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-white border border-gray-200 rounded-lg p-4 text-center hover:shadow-md transition-shadow">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 mb-8">
+            <div className="bg-white border border-gray-200 rounded-lg p-4 text-center hover:shadow-md transition-shadow w-full sm:w-1/2 lg:w-1/3">
               <div className="p-3 bg-gray-100 rounded-full w-fit mx-auto mb-3">
                 <HiOutlineDocumentText className="text-gray-600 text-xl" />
               </div>
@@ -206,7 +206,7 @@ const ContactUs = () => {
               </a>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-lg p-4 text-center hover:shadow-md transition-shadow">
+            <div className="bg-white border border-gray-200 rounded-lg p-4 text-center hover:shadow-md transition-shadow w-full sm:w-1/2 lg:w-1/3">
               <div className="p-3 bg-gray-100 rounded-full w-fit mx-auto mb-3">
                 <HiOutlineSupport className="text-gray-600 text-xl" />
               </div>
@@ -219,7 +219,7 @@ const ContactUs = () => {
               </a>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-lg p-4 text-center hover:shadow-md transition-shadow">
+            <div className="bg-white border border-gray-200 rounded-lg p-4 text-center hover:shadow-md transition-shadow w-full sm:w-1/2 lg:w-1/3">
               <div className="p-3 bg-gray-100 rounded-full w-fit mx-auto mb-3">
                 <HiOutlineGlobeAlt className="text-gray-600 text-xl" />
               </div>

@@ -281,17 +281,17 @@ const Integration = () => {
               <Button
                 onClick={() => setIsAddModalOpen(true)}
                 leftIcon={<HiOutlinePlus />}
-                disabled={integrations.length >= 5}
+                disabled={integrations.length >= 2}
               >
                 Add Integration
               </Button>
             </div>
 
             {/* Integration Limit Warning */}
-            {integrations.length >= 5 && (
+            {integrations.length >= 2 && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-6">
                 <p className="text-yellow-800 text-sm">
-                  You have reached the maximum limit of 5 integrations. Please delete an existing integration to add a new one.
+                  You have reached the maximum limit of 2 integrations. Please delete an existing integration to add a new one.
                 </p>
               </div>
             )}
@@ -322,10 +322,10 @@ const Integration = () => {
                   </Card>
                 ) : (
                   /* Integration List */
-                  <div className="flex ">
+                  <div className="space-y-2">
                     {integrations.map((integration) => (
-                      <Card key={integration.id} className="p-6">
-                        <div className="flex items-start justify-between mb-4">
+                      <Card key={integration.id} className="p-2 w-full">
+                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             {getIntegrationIcon(integration.type)}
                             <div>
@@ -336,54 +336,36 @@ const Integration = () => {
                                 {integration.valid ? 'Connected' : 'Not connected'}
                               </p>
                             </div>
-                          </div>
-                          <div className="flex items-center gap-1">
+                            <div className="flex items-start gap-1">
                             {integration.valid ? (
                               <HiOutlineCheckCircle className="text-green-500 text-xl" />
                             ) : (
                               <HiOutlineXCircle className="text-red-500 text-xl" />
                             )}
                           </div>
-                        </div>
-
-                                                 <div className="mb-4">
-                           <p className="text-sm text-gray-600 font-mono break-all">
-                             {maskDatabaseUrl(integration.database_url)}
-                           </p>
-                           {integration.db_schema && (
-                             <div className="mt-2">
-                               <p className="text-xs text-gray-500">
-                                 Schema: {JSON.parse(integration.db_schema).total_tables} tables
-                               </p>
-                             </div>
-                           )}
-                         </div>
-
-                        <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                          <span>Created: {new Date(integration.createdAt).toLocaleDateString()}</span>
-                          <span>Updated: {new Date(integration.updatedAt).toLocaleDateString()}</span>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => openUpdateModal(integration)}
-                            leftIcon={<HiOutlinePencil />}
-                            className="flex-1"
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => openDeleteModal(integration)}
-                            leftIcon={<HiOutlineTrash />}
-                            className="flex-1"
-                          >
-                            Delete
-                          </Button>
-                        </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              iconOnly
+                              aria-label="Edit integration"
+                              title="Edit"
+                              onClick={() => openUpdateModal(integration)}
+                              leftIcon={<HiOutlinePencil className="text-base" />}
+                            />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              iconOnly
+                              aria-label="Delete integration"
+                              title="Delete"
+                              onClick={() => openDeleteModal(integration)}
+                              leftIcon={<HiOutlineTrash className="text-base text-red-600" />}
+                            />
+                          </div>
+                          
+                        </div>           
                       </Card>
                     ))}
                   </div>
@@ -399,6 +381,14 @@ const Integration = () => {
         isOpen={isAddModalOpen}
         onRequestClose={() => setIsAddModalOpen(false)}
         onSubmit={handleAddIntegration}
+        availableTypes={(function(){
+          const hasDb = integrations.some((i) => i.type === 'database');
+          const hasShopify = integrations.some((i) => i.type === 'shopify');
+          if (hasDb && hasShopify) return [] as Array<'database'|'shopify'>; // none
+          if (hasDb) return ['shopify'] as Array<'database'|'shopify'>;
+          if (hasShopify) return ['database'] as Array<'database'|'shopify'>;
+          return ['database', 'shopify'] as Array<'database'|'shopify'>;
+        })()}
       />
 
       <UpdateIntegrationModal

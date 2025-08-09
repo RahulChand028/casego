@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { bot } from '@/common/telegramBot'
-import { executeQuery  } from '@/app/api/bot/webhook/utils'
+import { bot } from '@/common/telegramBot';
+import { executeQuery, registerTelegramUser, getTelegramUserDBCred } from '@/app/api/bot/webhook/utils';
+
+
 export async function POST(request: NextRequest) {
   try {
 
@@ -11,12 +13,8 @@ export async function POST(request: NextRequest) {
       body
     );
 
-    // get userinfo
-    // check user present
-    // getInfosource
-    // make a call
 
-     const result = await executeQuery('');
+     //const result = await executeQuery('','');
 
 
 
@@ -24,11 +22,33 @@ export async function POST(request: NextRequest) {
     if (body.message) {
       const chatId = body.message.chat.id;
       const text = body.message.text;
+      const contact = body.message.contact;
+      const from = body.message.from;
 
       if(text) {
-        bot.sendMessage(chatId, JSON.stringify(result,null,4));
+
+        const integrationInfo = await getTelegramUserDBCred(from.id);
+
+        if(integrationInfo.integrated) {
+          bot.sendMessage(chatId, integrationInfo.schema ? JSON.stringify( { schema: true } , null, 4) : integrationInfo.message);
+        } else {
+          bot.sendMessage(chatId, integrationInfo.message);
+        }
+        
       }
+
+      if (contact && contact?.user_id == from.id) {
+        const registeredMessage = await registerTelegramUser(contact.phone_number, from.id);
+          bot.sendMessage(
+            chatId,
+            registeredMessage,
+            { parse_mode: 'HTML' }
+          );
+      }
+
     }
+
+   
 
     return new NextResponse('OK', { status: 200 });
 

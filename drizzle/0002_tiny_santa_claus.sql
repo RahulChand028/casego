@@ -1,0 +1,1 @@
+ALTER TABLE "integration" ADD COLUMN "telegram_user_id" text;

@@ -15,6 +15,13 @@
       "when": 1754673774705,
       "tag": "0001_lean_ikaris",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1754738390209,
+      "tag": "0002_tiny_santa_claus",
+      "breakpoints": true
     }
   ]
 }

@@ -83,7 +83,7 @@ export async function PATCH(
       );
     }
 
-    // Validate database URL
+    // Validate database URL presence
     if (!database_url || typeof database_url !== 'string') {
       return NextResponse.json(
         { error: 'Database URL is required and must be a string' },
@@ -91,13 +91,23 @@ export async function PATCH(
       );
     }
 
-    // Validate database URL format
-    const urlPattern = /^(postgresql|mysql):\/\/.+/i;
-    if (!urlPattern.test(database_url)) {
-      return NextResponse.json(
-        { error: 'Invalid database URL format. Must start with postgresql:// or mysql://' },
-        { status: 400 }
-      );
+    // Validate URL format by type
+    if (type === 'database') {
+      const dbUrlPattern = /^(postgresql|mysql):\/\/.+/i;
+      if (!dbUrlPattern.test(database_url)) {
+        return NextResponse.json(
+          { error: 'Invalid database URL format. Must start with postgresql:// or mysql://' },
+          { status: 400 }
+        );
+      }
+    } else if (type === 'shopify') {
+      const httpUrlPattern = /^https?:\/\/.+/i;
+      if (!httpUrlPattern.test(database_url)) {
+        return NextResponse.json(
+          { error: 'Invalid Shopify URL format. Must start with http:// or https://' },
+          { status: 400 }
+        );
+      }
     }
 
     // Check if integration exists and belongs to the user
@@ -118,23 +128,21 @@ export async function PATCH(
       );
     }
 
-    // Check for duplicate database URL (excluding the current integration ID)
-    const duplicateIntegration = await db
+    // Enforce one integration per type per user (excluding current integration)
+    const sameTypeIntegrations = await db
       .select()
       .from(integration)
       .where(
         and(
-          eq(integration.database_url, database_url),
-          eq(integration.userId, session.user.id)
+          eq(integration.userId, session.user.id),
+          eq(integration.type, type as 'database' | 'shopify')
         )
       );
 
-    // Filter out the current integration ID
-    const filteredDuplicates = duplicateIntegration.filter(integration => integration.id !== integrationId);
-
-    if (filteredDuplicates.length > 0) {
+    const otherSameType = sameTypeIntegrations.filter((i) => i.id !== integrationId);
+    if (otherSameType.length > 0) {
       return NextResponse.json(
-        { error: 'Integration with this database URL already exists for this user' },
+        { error: `You already have a ${type} integration.` },
         { status: 400 }
       );
     }

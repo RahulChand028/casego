@@ -97,6 +97,7 @@ export const integration = pgTable("integration", {
   valid: boolean("valid")
     .$defaultFn(() => false)
     .notNull(),
+  telegram_userId: text("telegram_user_id"),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),

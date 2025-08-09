@@ -104,17 +104,24 @@ const UpdatePhoneModal: React.FC<UpdatePhoneModalProps> = ({
     } = useForm<FormData>({
         defaultValues: {
             countryCode: data?.country_code ?? '',
-            phoneNumber: data?.phone_number ?? ''
+            phoneNumber: data?.phone_number
+              ? (data.country_code && data.phone_number.startsWith(data.country_code)
+                  ? data.phone_number.slice(data.country_code.length)
+                  : data.phone_number)
+              : ''
         }
     });
 
 
     useEffect(() => {
       if(data?.country_code) {
-        setValue('countryCode',data.country_code);
-        setValue('phoneNumber',data.phone_number);
+        setValue('countryCode', data.country_code);
+        const localNumber = data.phone_number && data.country_code && data.phone_number.startsWith(data.country_code)
+          ? data.phone_number.slice(data.country_code.length)
+          : (data.phone_number || '');
+        setValue('phoneNumber', localNumber);
       }
-    },[data]);
+    }, [data]);
 
     const handleFormSubmit = async (data: FormData) => {
         try {

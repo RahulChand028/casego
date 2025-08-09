@@ -39,7 +39,11 @@ const UpdatePhoneModal: React.FC<UpdatePhoneModalProps> = ({
   } = useForm<FormData>({
     defaultValues: {
       countryCode: data?.country_code ?? '+91',
-      phoneNumber: data?.phone_number ?? '',
+      phoneNumber: data?.phone_number
+        ? (data.country_code && data.phone_number.startsWith(data.country_code)
+            ? data.phone_number.slice(data.country_code.length)
+            : data.phone_number)
+        : '',
     },
   });
 
@@ -48,7 +52,10 @@ const UpdatePhoneModal: React.FC<UpdatePhoneModalProps> = ({
   useEffect(() => {
     if (data) {
       setValue('countryCode', data.country_code);
-      setValue('phoneNumber', data.phone_number);
+      const localNumber = data.phone_number && data.country_code && data.phone_number.startsWith(data.country_code)
+        ? data.phone_number.slice(data.country_code.length)
+        : (data.phone_number || '');
+      setValue('phoneNumber', localNumber);
     }
   }, [data, setValue]);
 

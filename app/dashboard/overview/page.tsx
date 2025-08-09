@@ -232,8 +232,8 @@ const DashboardPage = () => {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <Card className="p-6">
+            <div className="flex flex-col md:flex-row md:flex-wrap gap-6 mb-8">
+              <Card className="p-6 w-full md:basis-[calc(33.333%-1rem)]">
                 <div className="flex items-center">
                   <div className="p-2 bg-blue-100 rounded-lg">
                     <HiOutlinePhone className="text-blue-600 text-xl" />
@@ -245,7 +245,7 @@ const DashboardPage = () => {
                 </div>
               </Card>
 
-              <Card className="p-6">
+              <Card className="p-6 w-full md:basis-[calc(33.333%-1rem)]">
                 <div className="flex items-center">
                   <div className="p-2 bg-green-100 rounded-lg">
                     <HiOutlineCheckCircle className="text-green-600 text-xl" />
@@ -259,7 +259,7 @@ const DashboardPage = () => {
                 </div>
               </Card>
 
-              <Card className="p-6">
+              <Card className="p-6 w-full md:basis-[calc(33.333%-1rem)]">
                 <div className="flex items-center">
                   <div className="p-2 bg-yellow-100 rounded-lg">
                     <HiOutlineUser className="text-yellow-600 text-xl" />
@@ -337,7 +337,7 @@ const DashboardPage = () => {
                                   <HiOutlineXCircle className="text-red-500 text-xl" />
                                 )}
                                 <span className="text-gray-900 font-medium">
-                                  {phone.country_code} {phone.phone_number}
+                                  {phone.phone_number}
                                 </span>
                               </div>
                               {getStatusBadge(phone.valid)}
@@ -350,23 +350,25 @@ const DashboardPage = () => {
                                 <span>{formatDate(phone.createdAt)}</span>
                               </div>
                               
-                              <div className="flex items-center gap-1">
+                              <div className="flex items-center gap-2">
                                 <Button
-                                  variant="secondary"
+                                  variant="ghost"
                                   size="sm"
+                                  iconOnly
+                                  aria-label="Edit phone"
+                                  title="Edit"
                                   onClick={() => handleEditPhone(phone)}
-                                  leftIcon={<HiOutlinePencil />}
-                                >
-                                  Edit
-                                </Button>
+                                  leftIcon={<HiOutlinePencil className="text-base" />}
+                                />
                                 <Button
-                                  variant="danger"
+                                  variant="ghost"
                                   size="sm"
+                                  iconOnly
+                                  aria-label="Delete phone"
+                                  title="Delete"
                                   onClick={() => handleDeletePhone(phone)}
-                                  leftIcon={<HiOutlineTrash />}
-                                >
-                                  Delete
-                                </Button>
+                                  leftIcon={<HiOutlineTrash className="text-base text-red-600" />}
+                                />
                               </div>
                             </div>
                           </div>
@@ -387,11 +389,11 @@ const DashboardPage = () => {
             {/* Quick Actions */}
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
                 <Button
                   variant="secondary"
                   onClick={() => window.location.href = '/dashboard/integration'}
-                  className="justify-start"
+                  className="justify-start w-full sm:basis-[calc(50%-0.5rem)] lg:basis-[calc(33.333%-0.666rem)]"
                 >
                   <HiOutlineDatabase className="mr-2" />
                   Manage Integrations
@@ -399,7 +401,7 @@ const DashboardPage = () => {
                 <Button
                   variant="secondary"
                   onClick={() => window.location.href = '/dashboard/setting'}
-                  className="justify-start"
+                  className="justify-start w-full sm:basis-[calc(50%-0.5rem)] lg:basis-[calc(33.333%-0.666rem)]"
                 >
                   <HiOutlineUser className="mr-2" />
                   Account Settings
@@ -407,7 +409,7 @@ const DashboardPage = () => {
                 <Button
                   variant="secondary"
                   onClick={() => window.location.href = '/dashboard/contactus'}
-                  className="justify-start"
+                  className="justify-start w-full sm:basis-[calc(50%-0.5rem)] lg:basis-[calc(33.333%-0.666rem)]"
                 >
                   <HiOutlinePhone className="mr-2" />
                   Contact Support
@@ -439,7 +441,7 @@ const DashboardPage = () => {
         onConfirm={confirmDeletePhone}
         title="Delete Phone Number"
         message="Are you sure you want to delete this phone number? This action cannot be undone."
-        itemName={selectedPhone ? `${selectedPhone.country_code} ${selectedPhone.phone_number}` : undefined}
+        itemName={selectedPhone ? `${selectedPhone.phone_number}` : undefined}
         isDeleting={isDeleting}
       />
     </div>

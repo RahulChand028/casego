@@ -8,7 +8,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  children: React.ReactNode;
+  iconOnly?: boolean;
+  children?: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -17,6 +18,7 @@ const Button: React.FC<ButtonProps> = ({
   isLoading = false,
   leftIcon,
   rightIcon,
+  iconOnly = false,
   children,
   className = '',
   disabled,
@@ -25,8 +27,10 @@ const Button: React.FC<ButtonProps> = ({
   const baseClasses = componentClasses.button.base;
   const variantClasses = componentClasses.button[variant];
   const sizeClasses = componentClasses.button.sizes[size];
-  
-  const classes = `${baseClasses} ${variantClasses} ${sizeClasses} ${
+
+  const iconOnlySizeClasses = size === 'lg' ? 'p-3' : size === 'sm' ? 'p-1.5' : 'p-2';
+
+  const classes = `${baseClasses} ${variantClasses} ${iconOnly ? iconOnlySizeClasses : sizeClasses} ${
     disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''
   } ${className}`;
 
@@ -39,12 +43,18 @@ const Button: React.FC<ButtonProps> = ({
       {isLoading && (
         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
       )}
-      {!isLoading && leftIcon && (
-        <span className="mr-2">{leftIcon}</span>
-      )}
-      {children}
-      {!isLoading && rightIcon && (
-        <span className="ml-2">{rightIcon}</span>
+      {!isLoading && iconOnly ? (
+        <>{leftIcon}</>
+      ) : (
+        <>
+          {!isLoading && leftIcon && (
+            <span className="mr-2">{leftIcon}</span>
+          )}
+          {children}
+          {!isLoading && rightIcon && (
+            <span className="ml-2">{rightIcon}</span>
+          )}
+        </>
       )}
     </button>
   );

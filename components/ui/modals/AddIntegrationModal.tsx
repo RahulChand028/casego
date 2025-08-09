@@ -9,6 +9,7 @@ interface AddIntegrationModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   onSubmit: (data: { type: string; database_url: string }) => void;
+  availableTypes?: Array<'database' | 'shopify'>;
 }
 
 interface FormData {
@@ -16,7 +17,7 @@ interface FormData {
   database_url: string;
 }
 
-const databaseTypes = [
+const allTypes = [
   { value: 'database', label: 'Database' },
   { value: 'shopify', label: 'Shopify' },
 ];
@@ -25,6 +26,7 @@ const AddIntegrationModal: React.FC<AddIntegrationModalProps> = ({
   isOpen,
   onRequestClose,
   onSubmit,
+  availableTypes,
 }) => {
   const {
     register,
@@ -32,6 +34,7 @@ const AddIntegrationModal: React.FC<AddIntegrationModalProps> = ({
     formState: { errors, isSubmitting },
     reset,
     watch,
+    setValue,
   } = useForm<FormData>({
     defaultValues: {
       type: 'database',
@@ -40,6 +43,20 @@ const AddIntegrationModal: React.FC<AddIntegrationModalProps> = ({
   });
 
   const watchedType = watch('type');
+
+  const filteredTypeOptions = (availableTypes && availableTypes.length > 0)
+    ? allTypes.filter((t) => availableTypes.includes(t.value as 'database' | 'shopify'))
+    : allTypes;
+
+  // Ensure default type aligns with availableTypes whenever modal opens
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const nextType = (availableTypes && availableTypes.length > 0)
+      ? availableTypes[0]
+      : 'database';
+    setValue('type', nextType);
+    setValue('database_url', '');
+  }, [isOpen, availableTypes, setValue]);
 
   const handleFormSubmit = async (data: FormData) => {
     try {
@@ -99,7 +116,7 @@ const AddIntegrationModal: React.FC<AddIntegrationModalProps> = ({
         {/* Integration Type */}
         <Select
           label="Integration Type"
-          options={databaseTypes}
+          options={filteredTypeOptions}
           value={watchedType}
           onChange={(value) => {
             // Update the form value

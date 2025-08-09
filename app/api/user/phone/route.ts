@@ -30,13 +30,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate phone number
+    // Validate country code
     if (!countryCodeValue || typeof countryCodeValue !== 'string') {
       return NextResponse.json(
         { error: 'Country code is required and must be a string' },
         { status: 400 }
       );
     }
+
+    // Compose full E.164-like phone (country code + national number)
+    const normalizedCountryCode = String(countryCodeValue).replace(/\s|-/g, '');
+    const normalizedLocalNumber = String(phoneNumberValue).replace(/\D/g, '');
+    const fullPhoneNumber = `${normalizedCountryCode}${normalizedLocalNumber}`;
 
     // Check if user already has 5 phone numbers
     const existingPhoneCount = await db
@@ -51,14 +56,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if phone number already exists for this user
+    // Check if composed phone number already exists for this user
     const existingPhone = await db
       .select()
       .from(phoneNumber)
       .where(
         and(
-          eq(phoneNumber.country_code, countryCodeValue),
-          eq(phoneNumber.phone_number, phoneNumberValue),
+          eq(phoneNumber.phone_number, fullPhoneNumber),
           eq(phoneNumber.userId, session.user.id)
         )
       );
@@ -80,7 +84,7 @@ export async function POST(request: NextRequest) {
         id: phoneId,
         userId: session.user.id,
         country_code: countryCodeValue,
-        phone_number: phoneNumberValue,
+        phone_number: fullPhoneNumber,
         valid: false, // Default to false, will be validated later
       })
       .returning();
